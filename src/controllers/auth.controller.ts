@@ -1,0 +1,89 @@
+import { type Request, Response } from "express";
+import bcrypt, { hash } from "bcrypt";
+import jwt from "jsonwebtoken";
+import { UserModel } from "../models/mongodb/user";
+import { authUserShcema } from "../schemas/UserSchema";
+import { appConfig } from "../config/app.config";
+
+export class AuthController {
+  static async WebLogin(req: Request, res: Response) {
+    const { username, password } = req.body;
+
+    const isValidUsername = await UserModel.findOne({ username });
+
+    if (!isValidUsername) {
+      return res.status(400).json({ message: "Invalid username" });
+    }
+
+    const isValidHashedPassword = await bcrypt.compare(
+      password,
+      isValidUsername.password
+    );
+
+    if (!isValidHashedPassword) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const token = await jwt.sign(
+      {
+        id: isValidUsername.id,
+        username: isValidUsername.username,
+      },
+      appConfig.AUTH_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).json({ message: "User logged successfully", token });
+  }
+
+  static async LoaderLogin(req: Request, res: Response) {
+    const { username, password, hwid } = req.body;
+
+    const isValidObj = await authUserShcema.safeParse(req.body);
+
+    if (!isValidObj.success) {
+      const { errors } = isValidObj.error;
+      return res.status(400).json({ message: errors });
+    }
+
+    const isValidUsername = await UserModel.findOne({ username });
+
+    if (!isValidUsername) {
+      return res.status(400).json({ message: "Invalid username" });
+    }
+
+    const isValidHashedPassword = bcrypt.compareSync(
+      password,
+      isValidUsername.password
+    );
+
+    if (!isValidHashedPassword) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    return res.status(200).json({ message: "User logged successfully" });
+  }
+
+  static async Register(req: Request, res: Response) {
+    const { username, password } = req.body;
+
+    const isAlreadyUsedUsername = await UserModel.findOne({
+      username: username,
+    });
+
+    console.log(isAlreadyUsedUsername);
+
+    if (isAlreadyUsedUsername) {
+      return res.status(400).json({ message: "Username is already used" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await UserModel.create({
+      username,
+      password: hashedPassword,
+    });
+
+    return res.status(200).json({ message: "Account created successfully" });
+  }
+}
