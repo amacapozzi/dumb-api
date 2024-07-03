@@ -33,6 +33,12 @@ export class AuthController {
       { expiresIn: "1h" }
     );
 
+    res.cookie("auth-session", token, {
+      httpOnly: true,
+      secure: process.env.PRODUCTION === "PRODUCTION",
+      maxAge: 3600000,
+    });
+
     return res.status(200).json({ message: "User logged successfully", token });
   }
 
