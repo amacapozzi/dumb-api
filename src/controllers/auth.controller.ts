@@ -84,13 +84,11 @@ export class AuthController {
         username: username,
       });
 
-      console.log(isAlreadyUsedUsername);
-
       if (isAlreadyUsedUsername) {
         return res.status(400).json({ message: "Username is already used" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = bcrypt.hashSync(password, 10);
 
       await UserModel.create({
         username,
