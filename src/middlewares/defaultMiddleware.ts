@@ -8,6 +8,8 @@ export const defaultMiddleware = async (
 ) => {
   const authToken = await req.headers.authorization?.split(" ")[1];
 
+  console.log(authToken);
+
   if (authToken !== appConfig.AUTH_TOKEN || !authToken) {
     return res.send("Unauthorized");
   }
