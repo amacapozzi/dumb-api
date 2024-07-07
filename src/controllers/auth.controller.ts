@@ -84,6 +84,8 @@ export class AuthController {
     }
 
     if (!isValidUsername.hwid) {
+      console.log("Not have hwid ");
+
       await isValidUsername.updateOne(
         { username: username },
         {
