@@ -60,6 +60,8 @@ export class AuthController {
 
     const isValidUsername = await UserModel.findOne({ username });
 
+    const hwidBanned = await UserModel.findOne({ hwid: hwid, isBanned: true });
+
     if (!isValidUsername) {
       return res.status(400).json({ message: "Invalid username" });
     }
@@ -71,6 +73,23 @@ export class AuthController {
 
     if (!isValidHashedPassword) {
       return res.status(400).json({ message: "Invalid password" });
+    }
+
+    if (hwidBanned) {
+      return res.status(400).json({ message: "Your hadware is banned" });
+    }
+
+    if (isValidUsername.isBanned) {
+      return res.status(400).json({ message: "You are banned" });
+    }
+
+    if (!isValidUsername.hwid) {
+      await isValidUsername.updateOne({ username: username, hwid: hwid });
+    }
+
+    if (isValidUsername.hwid && isValidUsername.hwid !== hwid) {
+      await isValidUsername.updateOne({ username: username, isBanned: true });
+      return res.status(400).json({ message: "HWID Mismatch" });
     }
 
     return res.status(200).json({ message: "User logged successfully" });
