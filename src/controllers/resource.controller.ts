@@ -1,6 +1,7 @@
 import { type Request, Response } from "express";
 import fs from "fs";
 import path from "path";
+import { LoaderModel } from "../models/mongodb/loader";
 
 const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
@@ -24,5 +25,14 @@ export class ResourceController {
     } catch {
       return res.status(404).json({ message: "Resource not found." });
     }
+  }
+
+  static async getLoaderStatus(_req: Request, res: Response) {
+    const loaderInfo = await LoaderModel.find();
+
+    return res.status(200).json({
+      version: loaderInfo[0].version,
+      isEnabled: loaderInfo[0].isEnabled,
+    });
   }
 }

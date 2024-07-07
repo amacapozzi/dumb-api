@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema<User>(
     key: String,
     customer: { type: Boolean, default: false },
     expire: Date,
-    hwid: String,
+    hwid: { type: String },
     isBanned: { type: Boolean, default: false },
   },
   {

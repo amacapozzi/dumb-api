@@ -16,3 +16,8 @@ export interface Key {
   expire: Date | String;
   usedBy: string;
 }
+
+export interface Loader {
+  isEnabled: boolean;
+  version: number;
+}
