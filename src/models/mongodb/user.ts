@@ -32,7 +32,7 @@ const keySchema = new mongoose.Schema<Key>(
   {
     key: String,
     used: { type: Boolean, default: false },
-    expire: Date,
+    expire: { type: Date, required: true },
     usedBy: String,
     author: String,
   },

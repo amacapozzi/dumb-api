@@ -13,7 +13,7 @@ export interface Key {
   key: string;
   author: string;
   used: boolean;
-  expire: Date | String;
+  expire: Date;
   usedBy: string;
 }
 

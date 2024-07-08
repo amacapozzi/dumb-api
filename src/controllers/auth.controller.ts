@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { UserModel } from "../models/mongodb/user";
 import { authUserShcema } from "../schemas/UserSchema";
 import { appConfig } from "../config/app.config";
+import { KeyHelper } from "../utils/KeyHelper";
 
 export class AuthController {
   static async WebLogin(req: Request, res: Response) {
@@ -29,6 +30,10 @@ export class AuthController {
         {
           id: isValidUsername.id,
           username: isValidUsername.username,
+          isAdmin: isValidUsername.isAdmin,
+          customer: isValidUsername.customer,
+          hwid: isValidUsername.hwid,
+          expire: isValidUsername.expire,
         },
         appConfig.AUTH_SECRET_KEY,
         { expiresIn: "1h" }
@@ -88,8 +93,19 @@ export class AuthController {
       return res.status(400).json({ message: "You are banned" });
     }
 
+    const keyService = new KeyHelper(isValidUsername.expire);
+
     if (!isValidUsername.hwid) {
       await isValidUsername.updateOne({ hwid: hwid });
+    }
+
+    const isExpired = await keyService.isExpired();
+
+    console.log(keyService.getTimeLeft());
+
+    if (isExpired) {
+      await isValidUsername.updateOne({ customer: false });
+      return res.status(400).json({ message: "Your subcription is expired" });
     }
 
     if (isValidUsername.hwid && isValidUsername.hwid !== hwid) {
