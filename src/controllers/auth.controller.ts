@@ -42,7 +42,11 @@ export class AuthController {
 
       return res
         .status(200)
-        .json({ message: "User logged successfully", token });
+        .json({
+          message: "User logged successfully",
+          token,
+          hwid: isValidUsername.hwid ? isValidUsername.hwid : null,
+        });
     } catch {
       return res.status(500).json({ message: "Internal server error" });
     }
