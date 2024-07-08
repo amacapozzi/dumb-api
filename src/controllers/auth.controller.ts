@@ -40,13 +40,10 @@ export class AuthController {
         maxAge: 3600000,
       });
 
-      return res
-        .status(200)
-        .json({
-          message: "User logged successfully",
-          token,
-          hwid: isValidUsername.hwid ? isValidUsername.hwid : null,
-        });
+      return res.status(200).json({
+        message: "User logged successfully",
+        token,
+      });
     } catch {
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -79,6 +76,10 @@ export class AuthController {
       return res.status(400).json({ message: "Invalid password" });
     }
 
+    if (!isValidUsername.customer) {
+      return res.status(400).json({ message: "You are a not customer" });
+    }
+
     if (hwidBanned) {
       return res.status(400).json({ message: "Your hadware is banned" });
     }
@@ -88,8 +89,6 @@ export class AuthController {
     }
 
     if (!isValidUsername.hwid) {
-      console.log("Not have hwid ");
-
       await isValidUsername.updateOne({ hwid: hwid });
     }
 
