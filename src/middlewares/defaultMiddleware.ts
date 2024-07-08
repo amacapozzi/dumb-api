@@ -11,7 +11,7 @@ export const defaultMiddleware = async (
   console.log(authToken);
 
   if (authToken !== appConfig.AUTH_TOKEN || !authToken) {
-    return res.send("Unauthorized");
+    return res.status(400).send("Unauthorized");
   }
 
   return next();
