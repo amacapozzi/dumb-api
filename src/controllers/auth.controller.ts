@@ -56,8 +56,6 @@ export class AuthController {
       await isValidUsername.save();
 
       res.cookie("auth-session", token, {
-        httpOnly: true,
-        secure: process.env.PRODUCTION === "PRODUCTION",
         maxAge: 3600000,
       });
 
