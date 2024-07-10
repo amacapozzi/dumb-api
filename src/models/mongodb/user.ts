@@ -14,6 +14,7 @@ mongoose
 const userSchema = new mongoose.Schema<User>(
   {
     username: String,
+    refreshToken: String,
     password: String,
     isAdmin: { type: Boolean, default: false },
     key: String,
