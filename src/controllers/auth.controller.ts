@@ -48,7 +48,7 @@ export class AuthController {
           hwid: isValidUsername.hwid,
           expire: isValidUsername.expire,
         },
-        appConfig.REFRESH_TOKEN,
+        appConfig.AUTH_SECRET_KEY,
         { expiresIn: "7d" }
       );
 
@@ -79,7 +79,10 @@ export class AuthController {
         return res.status(401).json({ message: "Refresh token required" });
       }
 
-      const decoded = jwt.verify(refreshToken, appConfig.REFRESH_TOKEN) as any;
+      const decoded = jwt.verify(
+        refreshToken as any,
+        appConfig.AUTH_SECRET_KEY
+      ) as any;
 
       const decodedId = decoded.id;
 
@@ -104,7 +107,7 @@ export class AuthController {
           hwid: user.hwid,
           expire: user.expire,
         },
-        appConfig.REFRESH_TOKEN,
+        appConfig.AUTH_SECRET_KEY,
         { expiresIn: "1h" }
       );
 
