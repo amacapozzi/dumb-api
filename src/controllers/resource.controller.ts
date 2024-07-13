@@ -2,7 +2,6 @@ import { type Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { LoaderModel } from "../models/mongodb/loader";
-import multer from "multer";
 export const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
 export class ResourceController {
