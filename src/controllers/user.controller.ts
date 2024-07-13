@@ -50,6 +50,10 @@ export class UserController {
 
     const isValidUser = await UserModel.findOne({ _id: userId });
 
+    if (expiration < 1) {
+      return res.status(400).json({ message: "The minimum duration is 1 day" });
+    }
+
     const today = new Date();
     const expireDate = new Date(
       today.getTime() + expiration * 24 * 60 * 60 * 1000
@@ -71,5 +75,27 @@ export class UserController {
     });
 
     return res.status(200).json({ message: "Key created", randomKey });
+  }
+
+  static async getUser(req: Request, res: Response) {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: "UserID is required" });
+    }
+
+    try {
+      const user = await UserModel.findOne({ _id: userId.toString() }).lean();
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { password, ...clientUser } = user;
+
+      return res.status(200).json(clientUser);
+    } catch {
+      return res.status(400).json({ message: "Invalid ID Format" });
+    }
   }
 }

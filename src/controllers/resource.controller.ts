@@ -2,8 +2,8 @@ import { type Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { LoaderModel } from "../models/mongodb/loader";
-
-const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
+import multer from "multer";
+export const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
 export class ResourceController {
   static async getResourceByName(req: Request, res: Response) {
@@ -34,5 +34,17 @@ export class ResourceController {
       version: loaderInfo[0].version,
       isEnabled: loaderInfo[0].isEnabled,
     });
+  }
+
+  static async updateLoader(_req: Request, res: Response) {
+    try {
+      return res
+        .status(200)
+        .json({ message: "Loader of type CLI has been updated" });
+    } catch {
+      return res
+        .status(500)
+        .json({ message: "Error trying uploading the loader" });
+    }
   }
 }

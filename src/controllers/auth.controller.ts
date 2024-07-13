@@ -1,4 +1,4 @@
-import { type Request, Response } from "express";
+import e, { type Request, Response } from "express";
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/mongodb/user";
@@ -26,43 +26,19 @@ export class AuthController {
         return res.status(400).json({ message: "Invalid password" });
       }
 
-      const token = await jwt.sign(
-        {
-          id: isValidUsername.id,
-          username: isValidUsername.username,
-          isAdmin: isValidUsername.isAdmin,
-          customer: isValidUsername.customer,
-          hwid: isValidUsername.hwid,
-          expire: isValidUsername.expire,
-        },
-        appConfig.AUTH_SECRET_KEY,
-        { expiresIn: "1h" }
-      );
-
-      const refreshToken = jwt.sign(
-        {
-          id: isValidUsername.id,
-          username: isValidUsername.username,
-          isAdmin: isValidUsername.isAdmin,
-          customer: isValidUsername.customer,
-          hwid: isValidUsername.hwid,
-          expire: isValidUsername.expire,
-        },
-        appConfig.AUTH_SECRET_KEY,
-        { expiresIn: "7d" }
-      );
-
-      isValidUsername.refreshToken = refreshToken;
-      await isValidUsername.save();
-
-      res.cookie("auth-session", token, {
-        maxAge: 3600000,
-      });
+      const userObj = {
+        id: isValidUsername.id,
+        username: isValidUsername.username,
+        isAdmin: isValidUsername.isAdmin,
+        customer: isValidUsername.customer,
+        hwid: isValidUsername.hwid,
+        expire: isValidUsername.expire,
+      };
 
       return res.status(200).json({
         message: "User logged successfully",
-        token,
-        refreshToken,
+
+        user: userObj,
       });
     } catch {
       return res.status(500).json({ message: "Internal server error" });
@@ -71,7 +47,7 @@ export class AuthController {
 
   static async RefreshToken(req: Request, res: Response) {
     try {
-      const { refreshToken } = req.body;
+      const { refreshToken } = req.query;
 
       if (!refreshToken) {
         return res.status(401).json({ message: "Refresh token required" });

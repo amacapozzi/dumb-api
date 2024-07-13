@@ -1,13 +1,36 @@
 import express from "express";
+import path from "path";
 import { ResourceController } from "../controllers/resource.controller";
 import { defaultMiddleware } from "../middlewares/defaultMiddleware";
+
+import multer from "multer";
+import { FileType, getFileName } from "../utils/FileHelper";
+
+const storage = multer.diskStorage({
+  destination: "src/resources",
+  filename: function (req, file, callback) {
+    const { type } = req.query;
+
+    console.log(file.originalname);
+
+    const name = getFileName(
+      type?.toString().toUpperCase() as FileType,
+      file.originalname
+    );
+    callback(null, name?.toString() as string);
+  },
+});
+const upload = multer({ storage: storage });
+
 export const ResourceRouter = express.Router();
 
-ResourceRouter.route("/").get(
-  defaultMiddleware,
-  ResourceController.getResourceByName
-);
+ResourceRouter.route("/").get(ResourceController.getResourceByName);
 ResourceRouter.route("/info").get(
   defaultMiddleware,
   ResourceController.getLoaderStatus
+);
+
+ResourceRouter.route("/upload").post(
+  upload.single("file"),
+  ResourceController.updateLoader
 );

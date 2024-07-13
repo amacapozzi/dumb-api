@@ -5,3 +5,4 @@ export const UserRouter = express.Router();
 
 UserRouter.route("/create/key").post(UserController.createKey);
 UserRouter.route("/claim/key").post(UserController.claimKey);
+UserRouter.route("/getUser/:userId").get(UserController.getUser);
