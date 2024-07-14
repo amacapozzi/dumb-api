@@ -167,6 +167,12 @@ export class AuthController {
     try {
       const { username, password } = req.body;
 
+      if (!username || !password) {
+        return res
+          .status(400)
+          .json({ message: "Username and password is required" });
+      }
+
       const isAlreadyUsedUsername = await UserModel.findOne({
         username: username,
       });
