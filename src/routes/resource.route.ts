@@ -32,6 +32,7 @@ ResourceRouter.route("/info").get(
 );
 
 ResourceRouter.route("/upload").post(
+  defaultMiddleware,
   upload.single("file"),
   ResourceController.updateLoader
 );
