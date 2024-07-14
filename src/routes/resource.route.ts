@@ -19,7 +19,10 @@ const upload = multer({ storage: storage });
 
 export const ResourceRouter = express.Router();
 
-ResourceRouter.route("/").get(ResourceController.getResourceByName);
+ResourceRouter.route("/").get(
+  defaultMiddleware,
+  ResourceController.getResourceByName
+);
 ResourceRouter.route("/info").get(
   defaultMiddleware,
   ResourceController.getLoaderStatus
