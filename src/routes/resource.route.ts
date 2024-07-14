@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
     callback(null, name?.toString() as string);
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { fileSize: Infinity } });
 
 export const ResourceRouter = express.Router();
 
