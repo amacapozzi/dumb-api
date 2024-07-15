@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 import { appConfig } from "../../config/app.config";
-import { type User, type Key } from "../../types/User";
+import { type User, type Key, IRole, Role } from "../../types/User";
 
 mongoose
   .connect(appConfig.MONGODB_URI)
@@ -11,6 +11,16 @@ mongoose
     console.log(`Error to connect to MongoDB ${err}`);
   });
 
+const roleSchema = new mongoose.Schema<Role>(
+  {
+    roleName: { type: String },
+  },
+  {
+    timestamps: false,
+    versionKey: false,
+  }
+);
+
 const userSchema = new mongoose.Schema<User>(
   {
     username: String,
@@ -18,7 +28,7 @@ const userSchema = new mongoose.Schema<User>(
     password: String,
     isAdmin: { type: Boolean, default: false },
     key: String,
-    roles: [{ type: String }],
+    roles: [roleSchema],
     customer: { type: Boolean, default: false },
     expire: Date,
     hwid: { type: String },

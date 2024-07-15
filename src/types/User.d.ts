@@ -11,6 +11,14 @@ export interface User {
   isAdmin: boolean;
 }
 
+interface IRole {
+  roles: Role[];
+}
+
+interface Role {
+  roleName: string;
+}
+
 export interface Key {
   key: string;
   author: string;
