@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema<User>(
     password: String,
     isAdmin: { type: Boolean, default: false },
     key: String,
+    roles: [{ type: String }],
     customer: { type: Boolean, default: false },
     expire: Date,
     hwid: { type: String },

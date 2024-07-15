@@ -4,6 +4,7 @@ export interface User {
   refreshToken: string;
   expire: Date;
   customer: boolean;
+  roles: string[];
   key: string;
   hwid: string;
   isBanned: boolean;
