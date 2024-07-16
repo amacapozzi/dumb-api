@@ -8,7 +8,6 @@ export interface User {
   key: string;
   hwid: string;
   isBanned: boolean;
-  isAdmin: boolean;
 }
 
 interface IRole {
@@ -16,6 +15,7 @@ interface IRole {
 }
 
 interface Role {
+  roleId: string;
   roleName: string;
 }
 

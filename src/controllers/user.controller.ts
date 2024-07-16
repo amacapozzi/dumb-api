@@ -1,6 +1,7 @@
 import { type Request, Response } from "express";
 import { KeyModel, UserModel } from "../models/mongodb/user";
 import { activeKeySchema, createKeySchema } from "../schemas/UserSchema";
+import { isAdmin, type Role } from "../utils/UserHelper";
 
 export class UserController {
   static async claimKey(req: Request, res: Response) {
@@ -61,7 +62,7 @@ export class UserController {
 
     if (!isValidUser) {
       return res.status(400).json({ message: "User not found" });
-    } else if (!isValidUser.isAdmin) {
+    } else if (!isAdmin(isValidUser.roles as any)) {
       return res.status(400).json({ message: "You cant create keys" });
     }
 

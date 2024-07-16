@@ -5,7 +5,6 @@ export const AuthRouter = express.Router();
 
 AuthRouter.route("/register").post(AuthController.Register);
 AuthRouter.route("/login").post(AuthController.WebLogin);
-AuthRouter.route("/refreshToken").get(AuthController.RefreshToken);
 AuthRouter.route("/loader/auth").post(
   defaultMiddleware,
   AuthController.LoaderLogin

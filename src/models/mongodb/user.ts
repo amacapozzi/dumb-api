@@ -13,6 +13,7 @@ mongoose
 
 const roleSchema = new mongoose.Schema<Role>(
   {
+    roleId: { type: String },
     roleName: { type: String },
   },
   {
@@ -21,12 +22,13 @@ const roleSchema = new mongoose.Schema<Role>(
   }
 );
 
+export const RoleModel = mongoose.model("Role", roleSchema);
+
 const userSchema = new mongoose.Schema<User>(
   {
     username: String,
     refreshToken: String,
     password: String,
-    isAdmin: { type: Boolean, default: false },
     key: String,
     roles: [roleSchema],
     customer: { type: Boolean, default: false },

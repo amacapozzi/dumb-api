@@ -1,7 +1,7 @@
 import e, { type Request, Response } from "express";
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
-import { UserModel } from "../models/mongodb/user";
+import { RoleModel, UserModel } from "../models/mongodb/user";
 import { authUserShcema } from "../schemas/UserSchema";
 import { appConfig } from "../config/app.config";
 import { KeyHelper } from "../utils/KeyHelper";
@@ -35,7 +35,6 @@ export class AuthController {
       const userObj = {
         id: isValidUsername.id,
         username: isValidUsername.username,
-        isAdmin: isValidUsername.isAdmin,
         customer: isValidUsername.customer,
         hwid: isValidUsername.hwid,
         expire: isValidUsername.expire,
@@ -47,62 +46,6 @@ export class AuthController {
         user: userObj,
       });
     } catch {
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  }
-
-  static async RefreshToken(req: Request, res: Response) {
-    try {
-      const { refreshToken } = req.query;
-
-      if (!refreshToken) {
-        return res.status(401).json({ message: "Refresh token required" });
-      }
-
-      const decoded = jwt.verify(
-        refreshToken as any,
-        appConfig.AUTH_SECRET_KEY
-      ) as any;
-
-      const decodedId = decoded.id;
-
-      console.log(decodedId);
-
-      const user = await UserModel.findOne({ _id: decodedId });
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (user.refreshToken !== refreshToken) {
-        return res.status(401).json({ message: "Invalid refresh token" });
-      }
-
-      const accessToken = jwt.sign(
-        {
-          id: user.id,
-          username: user.username,
-          isAdmin: user.isAdmin,
-          customer: user.customer,
-          hwid: user.hwid,
-          expire: user.expire,
-        },
-        appConfig.AUTH_SECRET_KEY,
-        { expiresIn: "1h" }
-      );
-
-      res.cookie("auth-session", accessToken, {
-        httpOnly: true,
-        secure: process.env.PRODUCTION === "PRODUCTION",
-        maxAge: 3600000,
-      });
-
-      return res.status(200).json({
-        message: "Token refreshed successfully",
-        accessToken,
-      });
-    } catch (error) {
-      console.error("Error in RefreshToken:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
@@ -189,13 +132,22 @@ export class AuthController {
 
       const hashedPassword = bcrypt.hashSync(password, 10);
 
+      const defaultRole = await RoleModel.findOne({ roleName: "User" }).lean();
+
+      const roleObj = {
+        roleId: defaultRole?._id.toString(),
+        roleName: defaultRole?.roleName,
+      };
+
       await UserModel.create({
         username,
+        roles: [roleObj],
         password: hashedPassword,
       });
 
       return res.status(200).json({ message: "Account created successfully" });
-    } catch {
+    } catch (e) {
+      console.log(e);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
