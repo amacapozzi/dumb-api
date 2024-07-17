@@ -1,4 +1,4 @@
-import mongoose, { mongo, version } from "mongoose";
+import mongoose from "mongoose";
 import { appConfig } from "../../config/app.config";
 import { type Loader } from "../../types/User";
 

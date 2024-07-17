@@ -2,6 +2,8 @@ import { type Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { LoaderModel } from "../models/mongodb/loader";
+import { DiscordHelper } from "../utils/DiscordHelper";
+import { appConfig } from "../config/app.config";
 export const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
 export class ResourceController {
@@ -35,11 +37,30 @@ export class ResourceController {
     });
   }
 
-  static async updateLoader(_req: Request, res: Response) {
+  static async updateLoader(req: Request, res: Response) {
     try {
-      return res
-        .status(200)
-        .json({ message: "Loader of type CLI has been updated" });
+      const author = {
+        name: "Dumb.lat - update",
+
+        icon_url:
+          "https://media.discordapp.net/attachments/1165371662166937700/1262202215439794266/Frame_3.png?ex=669908aa&is=6697b72a&hm=33b6b278d97588fc9b9912a6b859f38de3a9205d95d88c155e14acc21bd10b8d&=&format=webp&quality=lossless",
+      };
+
+      const discordLogCreate = new DiscordHelper(appConfig.WEBHOOK_URL);
+
+      discordLogCreate.createLog({
+        author: author,
+        description: `The loader is updated!\nThe resource with the name **${
+          req.file?.originalname
+        }** - \`(${
+          req.query.type
+        })\` has been updated\n⏲${new Date().toLocaleDateString()}`,
+        title: "Dumb.lat - Logs",
+      });
+
+      return res.status(200).json({
+        message: `Loader of type ${req.query.type} has been updated`,
+      });
     } catch {
       return res
         .status(500)
