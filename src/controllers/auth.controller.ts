@@ -109,7 +109,10 @@ export class AuthController {
       return res.status(400).json({ message: "HWID Mismatch" });
     }
 
-    return res.status(200).json({ message: "User logged successfully" });
+    return res.status(200).json({
+      message: "User logged successfully",
+      expire: new Date(isValidUsername.expire).toLocaleDateString(),
+    });
   }
 
   static async Register(req: Request, res: Response) {
