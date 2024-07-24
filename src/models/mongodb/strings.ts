@@ -16,7 +16,7 @@ const stringSchema = new mongoose.Schema<IString>(
     clientName: { type: String },
     addedBy: { type: String },
     cheatType: { type: String },
-    proessName: { type: String },
+    processName: { type: String },
     clientHash: { type: String },
   },
   {

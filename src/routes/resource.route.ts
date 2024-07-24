@@ -31,6 +31,11 @@ ResourceRouter.route("/info").get(
   ResourceController.getLoaderStatus
 );
 
+ResourceRouter.route("/strings").get(
+  defaultMiddleware,
+  ResourceController.getAllHashs
+);
+
 ResourceRouter.route("/upload").post(
   defaultMiddleware,
   upload.single("file"),

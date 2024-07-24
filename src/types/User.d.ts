@@ -15,7 +15,7 @@ type Cheat = "TZX" | "GOSTH" | "SUSANO" | "SKRIPT";
 interface IString {
   clientName: string;
   clientHash: string;
-  proessName: string;
+  processName: string;
   cheatType: Cheat;
   addedBy: string;
 }

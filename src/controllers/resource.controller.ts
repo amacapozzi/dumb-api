@@ -4,6 +4,8 @@ import path from "path";
 import { LoaderModel } from "../models/mongodb/loader";
 import { DiscordHelper } from "../utils/DiscordHelper";
 import { appConfig } from "../config/app.config";
+import { StringModel } from "../models/mongodb/strings";
+import { hash } from "bcrypt";
 export const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
 export class ResourceController {
@@ -35,6 +37,13 @@ export class ResourceController {
       version: loaderInfo[0].version,
       isEnabled: loaderInfo[0].isEnabled,
     });
+  }
+
+  static async getAllHashs(_req: Request, res: Response) {
+    const hashs = await StringModel.find();
+    console.log(hashs);
+
+    return res.status(200).json(hashs);
   }
 
   static async updateLoader(req: Request, res: Response) {
