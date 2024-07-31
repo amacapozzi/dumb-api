@@ -49,10 +49,10 @@ export class ResourceController {
   static async updateLoader(req: Request, res: Response) {
     try {
       const author = {
-        name: "Dumb.lat - update",
+        name: "Saturn.lat - update",
 
         icon_url:
-          "https://media.discordapp.net/attachments/1165371662166937700/1262202215439794266/Frame_3.png?ex=669908aa&is=6697b72a&hm=33b6b278d97588fc9b9912a6b859f38de3a9205d95d88c155e14acc21bd10b8d&=&format=webp&quality=lossless",
+          "https://media.discordapp.net/attachments/1266911238848385136/1268018412836229160/image.png?ex=66ab8e6c&is=66aa3cec&hm=559c3559b4198203d316a2eb995bdccd86d003d63e4b7ca6a3bcc76ac5a42af6&=&format=webp&quality=lossless&width=685&height=676",
       };
 
       const discordLogCreate = new DiscordHelper(appConfig.WEBHOOK_URL);
@@ -64,7 +64,7 @@ export class ResourceController {
         }** - \`(${
           req.query.type
         })\` has been updated\n⏲${new Date().toLocaleDateString()}`,
-        title: "Dumb.lat - Logs",
+        title: "Saturn.lat - Logs",
       });
 
       return res.status(200).json({
