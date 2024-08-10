@@ -5,7 +5,6 @@ import { LoaderModel } from "../models/mongodb/loader";
 import { DiscordHelper } from "../utils/DiscordHelper";
 import { appConfig } from "../config/app.config";
 import { StringModel } from "../models/mongodb/strings";
-import { hash } from "bcrypt";
 export const BASE_RESOURCE_PATH = path.join(process.cwd(), "src", "resources");
 
 export class ResourceController {

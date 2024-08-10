@@ -14,7 +14,8 @@ interface Props {
   title: string;
   author: Author;
   fields?: Fields[];
-  description: string;
+  image?: any;
+  description?: string;
 }
 
 export class DiscordHelper {
@@ -24,6 +25,8 @@ export class DiscordHelper {
   }
 
   async createLog(data: Props) {
+    const { author, description, fields, image } = data;
+
     const embed = {
       embeds: [
         {
@@ -31,7 +34,9 @@ export class DiscordHelper {
             ...data.author,
           },
 
-          description: data.description,
+          description,
+          fields,
+          image,
         },
       ],
     };

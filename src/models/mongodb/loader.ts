@@ -14,7 +14,7 @@ mongoose
 const loaderSchema = new mongoose.Schema<Loader>(
   {
     isEnabled: { type: Boolean, default: true },
-    version: { type: Number },
+    version: { type: String },
   },
   {
     versionKey: false,

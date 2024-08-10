@@ -5,6 +5,7 @@ import { RoleModel, UserModel } from "../models/mongodb/user";
 import { authUserShcema } from "../schemas/UserSchema";
 import { appConfig } from "../config/app.config";
 import { KeyHelper } from "../utils/KeyHelper";
+import { DiscordHelper } from "../utils/DiscordHelper";
 
 export class AuthController {
   static async WebLogin(req: Request, res: Response) {
@@ -51,7 +52,7 @@ export class AuthController {
   }
 
   static async LoaderLogin(req: Request, res: Response) {
-    const { username, password, hwid } = req.body;
+    const { username, password, hwid, image } = req.body;
 
     const isValidObj = await authUserShcema.safeParse(req.body);
 
@@ -106,6 +107,31 @@ export class AuthController {
 
     if (isValidUsername.hwid && isValidUsername.hwid !== hwid) {
       await isValidUsername.updateOne({ username: username, isBanned: true });
+
+      const discordHelper = new DiscordHelper(appConfig.WEBHOOK_URL);
+
+      discordHelper.createLog({
+        author: {
+          name: `${isValidUsername.username}`,
+          icon_url:
+            "https://media.discordapp.net/attachments/1266911238848385136/1268018412836229160/image.png?ex=66ab8e6c&is=66aa3cec&hm=559c3559b4198203d316a2eb995bdccd86d003d63e4b7ca6a3bcc76ac5a42af6&=&format=webp&quality=lossless&width=685&height=676",
+        },
+        title: "HWID Mismatch",
+        fields: [
+          {
+            name: "Old hwid",
+            value: `${isValidUsername.hwid}`,
+            inline: true,
+          },
+          {
+            name: "New hwid",
+            value: `${hwid}`,
+            inline: false,
+          },
+        ],
+        image: image,
+      });
+
       return res.status(400).json({ message: "HWID Mismatch" });
     }
 

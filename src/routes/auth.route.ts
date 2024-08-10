@@ -5,7 +5,4 @@ export const AuthRouter = express.Router();
 
 AuthRouter.route("/register").post(AuthController.Register);
 AuthRouter.route("/login").post(AuthController.WebLogin);
-AuthRouter.route("/loader/auth").post(
-  defaultMiddleware,
-  AuthController.LoaderLogin
-);
+AuthRouter.route("/loader/auth").post(AuthController.LoaderLogin);

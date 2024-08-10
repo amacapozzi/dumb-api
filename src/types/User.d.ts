@@ -39,5 +39,5 @@ export interface Key {
 
 export interface Loader {
   isEnabled: boolean;
-  version: number;
+  version: string;
 }
