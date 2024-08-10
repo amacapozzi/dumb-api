@@ -52,7 +52,7 @@ export class AuthController {
   }
 
   static async LoaderLogin(req: Request, res: Response) {
-    const { username, password, hwid, image } = req.body;
+    const { username, password, hwid } = req.body;
 
     const isValidObj = await authUserShcema.safeParse(req.body);
 
@@ -129,7 +129,6 @@ export class AuthController {
             inline: false,
           },
         ],
-        image: image,
       });
 
       return res.status(400).json({ message: "HWID Mismatch" });
