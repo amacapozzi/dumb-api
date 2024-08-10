@@ -54,6 +54,8 @@ export class AuthController {
   static async LoaderLogin(req: Request, res: Response) {
     const { username, password, hwid } = req.body;
 
+    console.log(req.body);
+
     const isValidObj = await authUserShcema.safeParse(req.body);
 
     if (!isValidObj.success) {
