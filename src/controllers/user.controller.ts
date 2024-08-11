@@ -1,6 +1,7 @@
 import { type Request, Response } from "express";
 import { KeyModel, UserModel } from "../models/mongodb/user";
 import { activeKeySchema, createKeySchema } from "../schemas/UserSchema";
+import crypto from "crypto";
 import { isAdmin, type Role } from "../utils/UserHelper";
 
 export class UserController {
