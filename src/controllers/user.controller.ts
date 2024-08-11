@@ -1,7 +1,7 @@
 import { type Request, Response } from "express";
 import { KeyModel, UserModel } from "../models/mongodb/user";
 import { activeKeySchema, createKeySchema } from "../schemas/UserSchema";
-import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 import { isAdmin, type Role } from "../utils/UserHelper";
 
 export class UserController {
@@ -66,8 +66,7 @@ export class UserController {
     } else if (!isAdmin(isValidUser.roles as any)) {
       return res.status(400).json({ message: "You cant create keys" });
     }
-
-    const randomKey = crypto.randomUUID();
+    const randomKey = uuidv4();
 
     await KeyModel.create({
       author: isValidUser.username,
