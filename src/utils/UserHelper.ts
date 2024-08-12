@@ -3,8 +3,8 @@ export interface Role {
   roleId: string;
 }
 
-const adminRolesID = ["6695b227e8827a5a1af222e7"];
-const resellerRolesId = ["6695b9d1e31e79c9846fd61a"];
+const adminRolesID = ["66b9774acecfddf0e776d5a7"];
+const resellerRolesId = ["66b9784ececfddf0e776d5a9"];
 
 export const isAdmin = (roles: Role[]): boolean => {
   if (roles.length < 1) return false;
